@@ -1,0 +1,212 @@
+---
+title: "Einführung in R Markdown"
+author: "Karsten Lübke"
+date: "`r Sys.Date()`"
+
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, setup, include=FALSE}
+library(mosaic)   # Paket laden
+```
+
+## RMarkdown verwenden
+
+
+### Text
+
+Text kann **fett** oder *kursiv* sein. Manchmal ~~durchgestrichen~~ und^[manchmal steht er in der Fußnote].
+
+Man kann Aufzählungen machen^[Beachten Sie die Leerzeile!]
+
+- R Markdown ist einfach
+- Aber flexibel
+- Und unterstützt reproduzierbares Arbeiten
+
+Natürlich geht auch eine numerierte Liste
+
+1. Erster Punkt
+2. Zweiter Punkt
+
+Links gehen so [Einführung](https://ismayc.github.io/rbasics-book/).
+
+LaTeX Formeln gehen $y=f(x)$, auch abgesetzt:
+$$\bar{x}=\sum_{i=1}^n x_i$$
+
+Hier vielleicht ein paar wichtige LaTeX-Symbole in der Statistik:
+$$\mu, \sigma, \pi, \alpha, \beta, y_0, x^2, \hat{x}, \bar{x}, \neq, \leq, \geq$$
+
+Sogar R Befehle können mit in die Gleichungen eingebaut werden. So gilt z.B. $e^0=`r exp(0)`$. 
+
+
+### R Befehle
+
+Über sogenannte Code-Chunks werden R Befehle ausgeführt, die Ausgabe wird sichtbar gemacht.
+
+```{r}
+data(Galton) # Ein berühmter Datensatz...
+inspect(Galton)
+```
+
+Siehe auch `?Galton`.
+
+Kennzahlen gehen
+```{r}
+mean(height ~ sex, data = Galton)
+```
+
+genau wie Abbildungen:
+```{r}
+gf_point(mother ~ father, data = Galton )
+```
+
+
+Aber auch Datenvorverarbeitung wird transparent:
+```{r}
+Galton <- Galton %>%
+  mutate(midparent = (mother+father)/2)
+
+gf_point(height ~ midparent, color = ~sex, data = Galton)
+```
+
+Modellierung etc.:
+```{r}
+erg.reg <- lm(height ~ midparent + sex, data = Galton)
+plotModel(erg.reg)
+summary(erg.reg)
+```
+
+Solche Chunks werden eingefügt über `Insert -> R`.
+
+
+## Simulationsbasierte Inferenz
+
+Z.B. Untersuchung des Größenvergleichs von Männern und Frauen:
+
+```{r}
+gf_violin(height ~ sex, data = Galton) %>%
+  gf_point(height ~ sex, data = Galton, 
+           stat = "summary", color = "red")
+```
+
+Wenig überraschend: sieht halbwegs normalverteilt aus -- und die Männer sind im Mittelwert (roter Punkt) größer:
+
+```{r}
+mean(height ~ sex, data = Galton)
+```
+
+D.h. es gibt eine Differenz von:
+
+```{r}
+diffmean(height ~ sex, data = Galton)
+```
+
+im Mittelwert der Größe zwischen den Geschlechtern.
+
+### Bootstrapping
+
+Aber: eine *andere* Stichprobe hätte auch i.d.R. eine *andere* Differenz der Mittelwerte ergeben. Wir haben nur die eine, aber wir können sie resamplen:
+
+```{r}
+set.seed(1896) # Zufallszahlengenerator: Reproduzierbarkeit
+diffmean(height ~ sex, data = resample(Galton))
+```
+
+Oder öfter:
+```{r}
+set.seed(1896) # Zufallszahlengenerator: Reproduzierbarkeit
+do(5)*diffmean(height ~ sex, data = resample(Galton))
+```
+
+Die Boostrapverteilung der Differenz der Mittelwerte ist einfach erzeugt:
+
+```{r}
+set.seed(1896) # Zufallszahlengenerator: Reproduzierbarkeit
+Bootvtlg <- do(1000)* diffmean(height ~ sex, data = resample(Galton))
+```
+
+Ein Vorteil ist, dass diese Verteilung visualisiert werden kann:
+```{r}
+gf_histogram( ~ diffmean, data = Bootvtlg)
+```
+
+Der geschätzte Standardfehler ist dann:
+```{r}
+sd( ~ diffmean, data = Bootvtlg)
+```
+
+Bzw. das $95\,\%$-Bootstrap Perzentil Konfidenzintervall:
+```{r}
+confint(Bootvtlg)
+```
+
+### Permutationstest
+
+Unter der Annahme, dass es *keinen* Unterschied in der Verteilung der Größe zwischen Männern und Frauen gibt, das beinhaltet $H_0: \mu_M=\mu_F \Leftrightarrow \mu_M-\mu_F=0$ kann das Geschlecht *permutiert* werden:
+
+```{r}
+set.seed(1896) # Zufallszahlengenerator: Reproduzierbarkeit
+diffmean(height ~ shuffle(sex), data = Galton)
+```
+
+Obwohl es nach *Konstruktion* keinen Unterschied gibt^[Ein evt. Zusammenhang zwischen Größe und Geschlecht wird durch die Permutation gelöst.] beobachten wir in der simulierten Verteilung eine (kleine) Differenz der Mittelwerte:
+
+```{r}
+set.seed(1896) # Zufallszahlengenerator: Reproduzierbarkeit
+do(5)*diffmean(height ~ shuffle(sex), data = Galton)
+```
+
+Die Verteilung unter $H_0$ wird dann wie folgt erzeugt:
+```{r}
+set.seed(1896) # Zufallszahlengenerator: Reproduzierbarkeit
+Nullvtlg <- do(1000)* diffmean(height ~ shuffle(sex), data = Galton)
+```
+
+Kritische Werte (zweiseitig, $\alpha=0.05$) sind:
+```{r}
+cdata(Nullvtlg)
+```
+
+Wie oft wurde in den simulierten Daten im Modell der Nullhypothese eine mindestens so große Abweichung wie in der Stichprobe beobachtet?
+
+Visuell:
+```{r}
+d.Stipro <- diffmean(height ~ sex, data = Galton)
+
+gf_histogram( ~ diffmean, data = Nullvtlg) %>%
+  gf_vline(xintercept = d.Stipro)
+```
+
+Nie.
+
+Numerisch:
+```{r}
+prop( ~ (abs(diffmean)>=abs(d.Stipro)), data = Nullvtlg)
+```
+
+Der p-Wert ist also kleiner als $1/1000$: in $1000$ simulierten Stichproben unter $H_0$ kam nicht einmal eine so große (absolute) Abweichung wie in der beobachteten Stichprobe vor.
+
+Diese Ergebnisse stimmen mit dem klassischen t-Test überein:
+```{r}
+t.test(height ~ sex, data = Galton)
+```
+
+
+<!-- Auch in Markdown kann ich kommentieren... -->
+
+## Versionshinweise
+
+Am Ende sollten vielleicht ein paar technische Informationen nicht fehlen:
+
+- Datum: `r Sys.Date()`
+- R Version: `r getRversion()`
+- `mosaic` Version: `r packageVersion("mosaic")`
+
+Oder, ausführlich:
+
+```{r, echo = FALSE}
+sessionInfo()
+```
+
+Erzeugt wird das Dokument (hier pdf) über `knit`.

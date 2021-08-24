@@ -1,0 +1,85 @@
+---
+title: "Fallstudie Zeit im Bad"
+author: "Ihr Name"
+date: "`r Sys.Date()`"
+---
+
+<!-- Diese Datei ist `UTF-8` encodiert. Wenn die Umlaute etc. nicht stimmen: `File -> Reopen with Encoding -> UTF-8`. -->
+
+```{r, setup, include=FALSE}
+library(mosaic)
+```
+
+
+# Datenbeschreibung
+
+Im Rahmen einer freiwilligen, anonymen Online-Umfrage im Sommersemester 2018 unter der Leitung von Frau Dipl.-Psych. Eva Wacker^[Vielen Dank für die Bereitstellung der Daten!] wurden diverse Daten von Studierenden erhoben. Diese liegen als `csv`Datei unter dem Namen `Daten_SoSe2018_FOM_Wacker.csv` vor.
+
+Erhoben wurden u.a. 
+
+- `geschlecht`: Bitte geben Sie Ihr Geschlecht an: männlich `m`, weiblich `w`.
+- `zeit.bad`: Wie viele Minuten benötigen Sie morgens insgesamt durchschnittlich im Badezimmer, um für den Tag fertig zu sein? (bitte eine runde Zahl ohne Nachkommastellen angeben)
+- `alter`: Bitte geben Sie Ihr Alter in vollen Jahren an: (eine runde Zahl ohne Nachkommastellen)
+
+<!-- Daten im Unterordner `data`, Pfad über `here`, siehe https://here.r-lib.org/ -->
+
+```{r}
+# Daten einlesen:
+Bad <- read.csv2(here::here("data", "Daten_SoSe2018_FOM_Wacker.csv"))
+```
+
+
+```{r}
+# Datenstruktur
+str(Bad)
+```
+
+# Univariate, deskriptive Analyse der Stichprobe
+
+## Geschlecht
+
+```{r}
+
+```
+
+## Alter
+
+```{r}
+
+```
+
+## Zeit im Bad
+
+```{r}
+
+```
+
+
+# Modellierung Zeit im Bad
+
+## Ohne erklärende Variable
+
+## Modellierung durch das Alter
+
+## Modellierung durch das Geschlecht
+
+## Modellierung durch Alter und Geschlecht
+
+## Prognose
+
+Persönliche Daten eingeben:
+```{r}
+MeineDaten <- data.frame(geschlecht = "m", alter = 47)
+```
+
+Prognose erstellen:
+```{r}
+
+```
+
+
+# Versionshinweise
+
+- Datum: `r Sys.Date()`
+- R Version: `r getRversion()`
+- `mosaic` Version: `r packageVersion("mosaic")`
