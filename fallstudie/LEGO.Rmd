@@ -1,0 +1,169 @@
+---
+title: "LEGO Preise"
+author: "Ihr Name"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(mosaic)
+library(here)
+```
+
+# LEGO Bausteine
+
+Wie kommt eigentlich der Preis für ein LEGO-Set zustande? Lesen Sie dazu das Statement unter [https://www.lego.com/de-de/service/help/produkte/themen-bausatze/so-legen-wir-die-preise-fur-lego-sets-fest](https://www.lego.com/de-de/service/help/produkte/themen-bausatze/so-legen-wir-die-preise-fur-lego-sets-fest-408100000008322).
+
+Über den Artikel Anna D. Peterson & Laura Ziegler (2021) Building a Multiple Linear Regression Model With LEGO Brick Data, Journal of Statistics and Data Science Education, [DOI: 10.1080/26939169.2021.1946450](https://doi.org/10.1080/26939169.2021.1946450) liegt uns hierfür eine Datentabelle von Amazon Preisen für eine zufällige Stichprobe von Produkten vor. Die Stichprobe wurde eingeschränkt auf folgende Serien:^[Siehe ergänzend [https://momsla.com/why-my-daughters-wont-be-playing-with-lego-friends/](https://momsla.com/why-my-daughters-wont-be-playing-with-lego-friends/)]
+
+- Duplo: [https://www.lego.com/de-de/themes/duplo](https://www.lego.com/de-de/themes/duplo)
+
+- City: [https://www.lego.com/de-de/themes/city](https://www.lego.com/de-de/themes/city)
+
+- Friends: [https://www.lego.com/de-de/themes/friends](https://www.lego.com/de-de/themes/friends)
+
+
+<!-- Technischer Hinweis: das Paket here (https://here.r-lib.org/) ermöglicht einen einfacheren Umgang mit Datei(pfaden) innerhalb von RStudio Projekten. Die csv Datei "lego.csv" befindet sich im Projektordner "data". -->
+
+```{r einlesen}
+# Datei (inkl. Pfad)
+legodaten <- here("data", "lego.csv")
+# Daten einlesen
+lego <- read.csv2(legodaten)
+# Datenstruktur
+str(lego)
+```
+
+#### Fragen
+
+- Wie viele Beobachtungen hat die Datentabelle?
+
+- Wie viele Variablen hat die Datentabelle?
+
+- Welches Skalenniveau hat die Variable `Theme`?
+
+- Welches Skalenniveau hat die Variable `Pieces`?
+
+- Welches Skalenniveau hat die Variable `Amazon_Price`? 
+
+## Preisverteilung
+
+### Grafisch
+
+```{r eda-preis}
+# Histogramm
+gf_histogram( ~ Amazon_Price, data = lego)
+```
+
+
+#### R Übung
+
+- Passen Sie das Histogramm über `center = ` und `binwidth = ` so an, dass Sie finden dass zentrale Eigenschaften der Verteilung gut sichtbar sind.
+
+```{r eda-preis-angepasst}
+# Histogramm
+gf_histogram( ~ Amazon_Price, data = lego, center = 0.5, binwidth = 1)
+```
+
+#### Fragen
+
+- Wie würden Sie die Verteilung beschreiben?
+
+### Kennzahlen
+
+#### Fragen
+
+- Wie Prozent der Sets kosten unter 10 Dollar?
+
+- Was ist größer: Der arithmetische Mittelwert oder der Median? Gibt es eine Verbindung zum Histogramm?
+
+- Was ist die Aussage des Ergebnisses von `qdata( ~ Amazon_Price, p = 0.95, data = lego)`?
+
+
+```{r kennzahlen-preis}
+
+```
+
+## Preismodellierung durch Serie
+
+Explorative Datenanalyse:
+
+```{r preis-serie}
+# Boxplot
+gf_boxplot(Amazon_Price ~ Theme, data = lego)
+# Kennzahlen
+favstats(Amazon_Price ~ Theme, data = lego)
+```
+
+#### Fragen
+
+- Bei welcher Serie ist der arithmetische Mittelwert des Preises am höchsten?
+
+- Bei welcher Serie ist die Streuung, gemessen in der Standardabweichung, am niedrigsten?
+
+- Ab welchem Preis gilt eine Beobachtung bei der Serie `City` als möglicher Ausreißer?
+
+
+## Preismodellierung durch Komplexität
+
+Die Komplexität eines Sets wird durch die Anzahl der Bausteine gemessen:
+
+```{r steine}
+# Kennzahlen
+favstats(Pieces ~ Theme, data = lego)
+```
+
+#### Fragen
+
+- Welche Serie hat die geringste Komplexität?
+
+- Welches Gütekriterium einer Messung ist bei der Operationalisierung von *Komplexität* durch `Pieces` besonders kritisch zu diskutieren?
+
+***
+
+Datenvorverarbeitung:
+
+```{r filter}
+# Beobachtungen der Serie "DUPLO" eliminieren
+lego_sub <- lego %>%
+  filter(Theme != "Duplo")
+```
+
+#### Fragen
+
+- Welche Datentabelle hat mehr Variablen: `lego`, `lego_sub` oder beide gleich?
+
+- Aus inhaltlichen Überlegungen: Welche Variable sollte auf die $x$-Achse gezeichnet werden: `Amazon_Price` oder `Pieces`?
+
+## Your-Turn
+
+#### Fragen
+
+- Wie würden Sie den Zusammenhang zwischen `Amazon_Price` und `Pieces` beschreiben?
+
+- Wie hoch ist der Korrelationskoeffizient nach Pearson zwischen `Amazon_Price` und `Pieces`?
+
+```{r feld-fuer-R-Code}
+
+```
+
+## Linerare Regression
+
+## Your-Turn
+
+Erstellen Sie ein Preismodell und interpretieren Sie das Ergebnis.
+
+```{r feld-fuer-R-Code-lm}
+
+```
+
+
+
+
+

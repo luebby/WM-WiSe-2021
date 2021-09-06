@@ -139,3 +139,7 @@ prop(E_Drama ~ E_Action, data = film, success = "Ja")
 
 - Wie viel Prozent derjenigen, die sich für Erotikfilme interessieren sind Frauen? Kann dieser Anteil auf die Bevölkerung der Bundesrepublik übertragen werden? Begründen Sie.
 
+```{r feld-fuer-R-Code}
+
+```
+
