@@ -13,6 +13,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(mosaic)
+library(here)
 ```
 
 # Filminteressen
@@ -21,13 +22,16 @@ Welche Filmgenres interessieren Studierende?
 
 Dazu liegt Datentabelle einer freiwilligen und anoymen Online-Umfrage unter FOM Studierenden in ausgewählten Fächern und Standorten vor.
 
+<!-- Technischer Hinweis: das Paket here (https://here.r-lib.org/) ermöglicht einen einfacheren Umgang mit Datei(pfaden) innerhalb von RStudio Projekten. Die csv Datei "film.csv" befindet sich im Projektordner "data". -->
+
 ```{r einlesen}
+# Datei (inkl. Pfad)
+filmdaten <- here("data", "film.csv")
 # Daten einlesen
-film <- read.csv2(here::here("data", "film.csv"))
+film <- read.csv2(filmdaten)
 # Datenstruktur
 str(film)
 ```
-
 
 #### Fragen
 
@@ -44,7 +48,6 @@ str(film)
 - Welches Skalenniveau hat die Variable `G01_Geschlecht`?
 
 - Welches Skalenniveau hat die Variable `G02_Alter`?
-
 
 ## Horrorfilme
 
@@ -88,6 +91,7 @@ gf_bar( ~ E_Horror, fill = ~ E_Komoedie, data = film, position = "fill",
 
 - Welche Gruppe interessiert sich mehr für Komödien? Die mit Interesse an Horrorfilmen oder die ohne?
 
+***
 
 ```{r kennzahlen-horror-komoedie}
 # Absolute Häufigkeiten
@@ -104,18 +108,13 @@ prop(E_Komoedie ~ E_Horror, data = film, success = "Ja")
 
 - Wird der Prozentsatz derjenigen, die sich für Komödien interessieren, die sich auch für Horrorfilme interessieren genau so hoch sein?
 
-***
-
 #### R Übung
 
 - Wie viel Prozent derjenigen, die sich für Komödien interessieren, interessieren sich auch für Horrorfilme?
 
-
 ```{r anteil-horror-an-komoedie}
 
 ```
-
-***
 
 ## Drama
 
@@ -131,7 +130,6 @@ prop(E_Drama ~ E_Action, data = film, success = "Ja")
 #### Frage
 
 - Wie lautet die *Frage*, auf die das Ergebnis `r prop(E_Drama ~ E_Action, data = film, success = "Ja")[2]` lautet?
-
 
 ## Your-Turn
 
