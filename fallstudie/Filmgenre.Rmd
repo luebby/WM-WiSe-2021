@@ -1,0 +1,143 @@
+---
+title: "Was guckst Du?"
+author: "Ihr Name"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(mosaic)
+```
+
+# Filminteressen
+
+Welche Filmgenres interessieren Studierende? 
+
+Dazu liegt Datentabelle einer freiwilligen und anoymen Online-Umfrage unter FOM Studierenden in ausgewählten Fächern und Standorten vor.
+
+```{r einlesen}
+# Daten einlesen
+film <- read.csv2(here::here("data", "film.csv"))
+# Datenstruktur
+str(film)
+```
+
+
+#### Fragen
+
+- Handelt es sich um eine zufällige Stichprobe der Bevölkerung der Bundesrepublik Deutschland?
+
+- Handelt es sich um eine zufällige Stichprobe von FOM Studierenden?
+
+- Liegt ein randomisiertes Experiment vor?
+
+- Wie viele Beobachtungen hat die Datentabelle?
+
+- Wie viele Variablen hat die Datentabelle?
+
+- Welches Skalenniveau hat die Variable `G01_Geschlecht`?
+
+- Welches Skalenniveau hat die Variable `G02_Alter`?
+
+
+## Horrorfilme
+
+Explorative Datenanalyse:
+
+```{r eda-horror}
+# Säulendiagramm
+gf_bar( ~ E_Horror, data = film)
+# Absolute Häufigkeiten
+tally( ~ E_Horror, data = film)
+# Relative Häufigkeiten
+tally( ~ E_Horror, data = film, format = "proportion")
+```
+
+
+#### Fragen
+
+- Interessiert sich eine Mehrheit der Stichprobe für Horrorfilme?
+
+- Wie viel Prozent der Teilnehmer:innen interessieren sich für Horrorfilme?
+
+### Horrorfilme und Komödien
+
+Explorative Datenanalyse:
+
+```{r abb-horror-komoedie}
+# Säulendiagramm
+gf_bar( ~ E_Horror, fill = ~ E_Komoedie, data = film, 
+        title = "Abbildung A")
+gf_bar( ~ E_Horror, fill = ~ E_Komoedie, data = film, position = position_dodge(),
+        title = "Abbildung B")
+gf_bar( ~ E_Horror, fill = ~ E_Komoedie, data = film, position = "fill",
+        title = "Abbildung C")
+```
+
+***
+
+#### Fragen
+
+- Anhand welcher Abbildung können Sie am Besten erkennen welche Gruppe (Intereesse an Horrorfilmen Ja oder Nein) sich eher für Komödien interessiert?
+
+- Welche Gruppe interessiert sich mehr für Komödien? Die mit Interesse an Horrorfilmen oder die ohne?
+
+
+```{r kennzahlen-horror-komoedie}
+# Absolute Häufigkeiten
+tally(E_Komoedie ~ E_Horror, data = film)
+# Relative Häufigkeiten
+tally(E_Komoedie ~ E_Horror, data = film, format = "proportion")
+# Anteile
+prop(E_Komoedie ~ E_Horror, data = film, success = "Ja")
+```
+
+#### Fragen
+
+- Wie viel Prozent derjenigen, die sich für Horrorfilme interessieren, interessieren sich auch für Komödien?
+
+- Wird der Prozentsatz derjenigen, die sich für Komödien interessieren, die sich auch für Horrorfilme interessieren genau so hoch sein?
+
+***
+
+#### R Übung
+
+- Wie viel Prozent derjenigen, die sich für Komödien interessieren, interessieren sich auch für Horrorfilme?
+
+
+```{r anteil-horror-an-komoedie}
+
+```
+
+***
+
+## Drama
+
+```{r drama}
+# Absolute Häufigkeiten
+tally(E_Drama ~ E_Action, data = film)
+# Relative Häufigkeiten
+tally(E_Drama ~ E_Action, data = film, format = "proportion")
+# Anteile
+prop(E_Drama ~ E_Action, data = film, success = "Ja")
+```
+
+#### Frage
+
+- Wie lautet die *Frage*, auf die das Ergebnis `r prop(E_Drama ~ E_Action, data = film, success = "Ja")[2]` lautet?
+
+
+## Your-Turn
+
+#### Fragen
+
+- Wie viel Prozent der männlichen Teilnehmenden interessieren sich für Liebesfilme?
+
+- Wie viel Prozent derjenigen, die sich für Erotikfilme interessieren sind Frauen? Kann dieser Anteil auf die Bevölkerung der Bundesrepublik übertragen werden? Begründen Sie.
+
