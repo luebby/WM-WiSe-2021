@@ -18,7 +18,7 @@ library(here)
 
 # LEGO Bausteine
 
-Wie kommt eigentlich der Preis für ein LEGO-Set zustande? Lesen Sie dazu das Statement unter [https://www.lego.com/de-de/service/help/produkte/themen-bausatze/so-legen-wir-die-preise-fur-lego-sets-fest](https://www.lego.com/de-de/service/help/produkte/themen-bausatze/so-legen-wir-die-preise-fur-lego-sets-fest-408100000008322).
+Wie kommt eigentlich der Preis für ein LEGO-Set zustande? Lesen Sie dazu das Statement unter [https://www.lego.com/de-de/service/help/Shopping/how-we-decide-the-prices-of-lego-sets-kA009000001dcamCAA](https://www.lego.com/de-de/service/help/Shopping/how-we-decide-the-prices-of-lego-sets-kA009000001dcamCAA).
 
 Über den Artikel Anna D. Peterson & Laura Ziegler (2021) Building a Multiple Linear Regression Model With LEGO Brick Data, Journal of Statistics and Data Science Education, [DOI: 10.1080/26939169.2021.1946450](https://doi.org/10.1080/26939169.2021.1946450) liegt uns hierfür eine Datentabelle von Amazon Preisen für eine zufällige Stichprobe von Produkten vor. Die Stichprobe wurde eingeschränkt auf folgende Serien:^[Siehe ergänzend [https://momsla.com/why-my-daughters-wont-be-playing-with-lego-friends/](https://momsla.com/why-my-daughters-wont-be-playing-with-lego-friends/)]
 
@@ -132,12 +132,14 @@ Datenvorverarbeitung:
 ```{r filter}
 # Beobachtungen der Serie "DUPLO" eliminieren
 lego_sub <- lego %>%
-  filter(Theme != "Duplo")
+  filter(Theme != "DUPLO")
 ```
 
 #### Fragen
 
 - Welche Datentabelle hat mehr Variablen: `lego`, `lego_sub` oder beide gleich?
+
+- Welche Darstellungform eignet sich das Verhältnis von Amazon_Price und Pieces zueinander darzustellen?
 
 - Aus inhaltlichen Überlegungen: Welche Variable sollte auf die $x$-Achse gezeichnet werden: `Amazon_Price` oder `Pieces`?
 
@@ -152,17 +154,6 @@ lego_sub <- lego %>%
 ```{r feld-fuer-R-Code}
 
 ```
-
-## Linerare Regression
-
-## Your-Turn
-
-Erstellen Sie ein Preismodell und interpretieren Sie das Ergebnis.
-
-```{r feld-fuer-R-Code-lm}
-
-```
-
 
 
 

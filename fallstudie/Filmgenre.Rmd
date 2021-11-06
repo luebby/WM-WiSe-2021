@@ -106,7 +106,7 @@ prop(E_Komoedie ~ E_Horror, data = film, success = "Ja")
 
 - Wie viel Prozent derjenigen, die sich für Horrorfilme interessieren, interessieren sich auch für Komödien?
 
-- Wird der Prozentsatz derjenigen, die sich für Komödien interessieren, die sich auch für Horrorfilme interessieren genau so hoch sein?
+- Wie viel Prozent derjenigen, die sich für Komödien interessieren, interessieren sich auch für Horrorfilme? Ändern Sie den Code entsprechend. Wird das Ergebnis genau so hoch sein wie bei der Frage zuvor?
 
 #### R Übung
 
