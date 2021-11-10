@@ -48,9 +48,9 @@ head(lego)
 
 - Welche metrischen Variablen liegen in der Datentabelle vor?
 
-### Datenvorverarbeitung
+***
 
-Zunächst betrachten wir nur die Serien `City` und `Friends` und reduzieren daher die Datentabelle um die Beobachtungen für die `Theme` nicht `DUPLO` ist.
+Zunächst betrachten wir nur die Serien `City` und `Friends` und behalten wir nur die Beobachtungen für das Theme nicht DUPLO ist.
 
 ```{r filter}
 # Beobachtungen der Serie "DUPLO" eliminieren
@@ -60,7 +60,15 @@ lego_sub <- lego %>%
 
 #### Frage
 
-- Welche Datentabelle hat mehr Variablen: `lego`, `lego_sub` oder beide gleich?
+- Welche Datentabelle hat mehr Beobachtungen: `lego`, `lego_sub` oder beide gleich?
+
+***
+
+```{r strsub}
+str(lego_sub)
+```
+
+***
 
 ## Preismodellierung durch Bauteile
 
@@ -77,7 +85,7 @@ $$y_i = \beta_0 + \beta_1 \cdot x_i + \epsilon_i$$
 
 - Was ist $\beta_0$?
 
-- Welche Variable (`Pieces`, `Amazon_Price`) sollte als erklärende Variable $x$, welche als zu erklärende Variable $y$ verwendet werden?
+- Welche Variable (`Pieces`, `Amazon_Price`) ist die abhängige Variable $y$?
 
 ### Schätzung lineares Modell
 
@@ -103,7 +111,7 @@ $$\hat{y}_i = `r betadach[1]` + `r betadach[2]` \cdot x_i$$
 
 #### Fragen
 
-- Welchen modellierten Wert hat ein Set mit $x_j=10$ Beurteilen? Gilt immer $\hat{y}_j = y_j$?
+- Welchen modellierten Wert hat ein Set mit $x_j=10$ Bauteilen? Gilt immer $\hat{y}_j = y_j$?
 
 - Wie ändert sich in diesem Modell der Stichprobe der Mittelwert von $y$, wenn ein Bauteil mehr im Set ist?
 
@@ -156,9 +164,9 @@ gf_histogram( ~ Pieces, data = Bootvtlg,
 
 - Wird durch das Bootstrapping die Anzahl der Beobachtungen erhöht?
 
-- Werden durch das Bootstrapping die Beobachtungen normalverteilt?
-
 - Welche Verteilung zeigt das Histogramm?
+
+- Werden durch das Bootstrapping die Beobachtungen normalverteilt?
 
 ***
 
